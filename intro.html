@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>School Lost & Found</title>
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+
+    /* TOP BAR */
+.topbar{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  background:#5e35b1;
+  color:white;
+  padding:15px;
+  display:flex;
+  align-items:center;
+  z-index:1000;
+}
+
+.menu-btn{
+  font-size:28px;
+  cursor:pointer;
+  margin-right:20px;
+}
+
+.menu-title{
+  margin:0;
+}
+
+/* SIDE MENU */
+.side-menu{
+  position:fixed;
+  top:0;
+  left:-260px;
+  width:260px;
+  height:100%;
+  background:#5e35b1;
+  padding-top:70px;
+  transition:0.3s;
+  display:flex;
+  flex-direction:column;
+  z-index:999;
+}
+
+.side-menu button{
+  background:none;
+  border:none;
+  color:white;
+  font-size:18px;
+  padding:15px 25px;
+  text-align:left;
+  cursor:pointer;
+}
+
+.side-menu button:hover{
+  background:rgba(255,255,255,0.15);
+}
+
+.close-btn{
+  position:absolute;
+  top:15px;
+  left:20px;
+  font-size:26px;
+  cursor:pointer;
+  color:white;
+}
+    body {
+      margin: 0;
+      font-family: "Comic Sans MS", Arial, sans-serif;
+
+      /* LIGHT PURPLE → BRIGHT LIGHT YELLOW */
+      background: linear-gradient(
+        135deg,
+        #c7b6f2,
+        #e6ddff,
+        #fff6a3
+      );
+      background-size: 400% 400%;
+      animation: diagonalBlend 12s ease-in-out infinite;
+
+      color: #333;
+    }
+
+    @keyframes diagonalBlend {
+      0% {
+        background-position: 0% 0%;
+      }
+      50% {
+        background-position: 100% 100%;
+      }
+      100% {
+        background-position: 0% 0%;
+      }
+    }
+
+    /* HERO */
+    .intro-hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .intro-content {
+      max-width: 900px;
+      background: #ffffffdd;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .intro-content h1 {
+      font-size: 60px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: #5e35b1;
+    }
+
+    .intro-content p {
+      font-size: 18px;
+      margin-bottom: 25px;
+    }
+
+    .snoopy-hero {
+      max-width: 200px;
+      margin-bottom: 20px;
+    }
+
+    .cta-btn {
+      font-size: 18px;
+      padding: 14px 36px;
+      background: #ffeb3b;
+      color: #333;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: transform 0.2s ease;
+    }
+
+    .cta-btn:hover {
+      transform: scale(1.1);
+      background: #fff176;
+    }
+
+    /* SECTIONS */
+    .section {
+      background: #ffffff;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .section h2 {
+      color: #5e35b1;
+      margin-bottom: 15px;
+    }
+
+    .section p {
+      max-width: 800px;
+      margin: 0 auto;
+      font-size: 16px;
+    }
+
+    /* CARDS */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      max-width: 900px;
+      margin: 40px auto 0;
+    }
+
+    .card {
+      background: #f3e5f5;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    }
+
+    .card img {
+      width: 100px;
+      margin-bottom: 10px;
+    }
+
+    .card h3 {
+      color: #3949ab;
+      margin-bottom: 10px;
+    }
+
+    /* FOOTER */
+    .tagline {
+      background: #5e35b1;
+      color: #fff;
+      padding: 25px;
+      text-align: center;
+      font-size: 14px;
+      letter-spacing: 2px;
+    }
+
+    @media (max-width: 768px) {
+      .intro-content h1 {
+        font-size: 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<button class="logout-btn" onclick="logout()">Logout</button>
+
+  <!-- TOP BAR -->
+<div class="topbar">
+  <span class="menu-btn" onclick="openMenu()">☰</span>
+  <h2 class="menu-title">Lost & Found</h2>
+</div>
+
+<!-- SIDE MENU -->
+<div id="sideMenu" class="side-menu">
+
+  <span class="close-btn" onclick="closeMenu()">✕</span>
+
+  <button onclick="location.href='lost.html'">Report Lost Items</button>
+
+  <button onclick="location.href='found.html'">Report Found Items</button>
+
+  <button onclick="location.href='view-lost.html'">View Lost Items</button>
+
+  <button onclick="location.href='view-found.html'">View Found Items</button>
+
+  <button id="adminHistoryBtn" style="display:none"
+          onclick="location.href='admin-history.html'">
+    Admin History
+  </button>
+
+</div>
+  
+  <!-- HERO -->
+  <section class="intro-hero">
+    <div class="intro-content">
+
+<img
+  class="snoopy-hero"
+  src="images/detective-cat.png"
+  alt="Detective Cat"
+>
+
+
+
+      <h1>Lost & Found</h1>
+      <p>
+        
+        Lost something at school or found an item? Don’t worry!
+      </p>
+
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section">
+    <h2>About Us</h2>
+    <p>
+      The School Lost & Found system helps students report lost items
+      and return found belongings in a friendly, safe, and easy way.
+      
+    </p>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section">
+    <h2>How It Works</h2>
+
+    <div class="cards">
+      <div class="card">
+        <img src="https://i.imgur.com/9Xn3K5F.png" alt="Lost">
+        <h3>Lost an Item?</h3>
+        <p>Report it with details and an image.</p>
+      </div>
+
+      <div class="card">
+        <img src="https://i.imgur.com/3GvwNBf.png" alt="Found">
+        <h3>Found an Item?</h3>
+        <p>Upload the item so the owner can see it.</p>
+      </div>
+
+      <div class="card">
+        <img src="https://i.imgur.com/2b8Z6Yx.png" alt="Returned">
+        <h3>Item Returned</h3>
+        <p>Once returned, Snoopy is happy again </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISION & MISSION -->
+  <section class="section">
+    <h2>Our Vision</h2>
+    <p>
+      To create a school where lost items always find their way back home.
+    </p>
+
+    <h2 style="margin-top:40px;">Our Mission</h2>
+    <p>
+      To help students report, find, and return lost items easily,
+      while continuously improving the system.
+    </p>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="tagline">
+    SCHOOL LOST & FOUND SYSTEM  
+  </div>
+
+  <script>
+    function goToLogin() {
+      window.location.href = "index.html";
+    }
+  </script>
+
+  <script>
+function openMenu(){
+  document.getElementById("sideMenu").style.left = "0";
+}
+
+function closeMenu(){
+  document.getElementById("sideMenu").style.left = "-260px";
+}
+</script>
+
+<script>
+function logout(){
+  localStorage.removeItem("studentName");
+  localStorage.removeItem("studentClass");
+  localStorage.removeItem("role");
+
+  window.location.href = "index.html";
+}
+</script>
+
+<script>
+
+const role = localStorage.getItem("role");
+
+if(role === "admin"){
+  document.getElementById("adminHistoryBtn").style.display = "block";
+}
+
+</script>
+  
+
+</body>
+</html>
+
+

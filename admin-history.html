@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin History</title>
+
+<style>
+
+body{
+  font-family: Arial, sans-serif;
+  background:#e9edf3;
+  margin:0;
+  padding:40px;
+}
+
+h1{
+  margin-bottom:30px;
+}
+
+.section{
+  margin-bottom:40px;
+}
+
+.card{
+  display:flex;
+  align-items:center;
+  background:white;
+  padding:20px;
+  margin-bottom:15px;
+  border-radius:10px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+.item-image{
+  width:120px;
+  height:120px;
+  object-fit:cover;
+  border-radius:10px;
+  margin-right:20px;
+}
+
+.card-details{
+  flex:1;
+}
+
+.card-details h3{
+  margin:0 0 10px 0;
+}
+
+.admin-buttons button{
+  margin-right:10px;
+  cursor:pointer;
+  padding:6px 12px;
+}
+
+.response-box{
+  margin-top:10px;
+  background:#f5f5f5;
+  padding:10px;
+  border-radius:6px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Admin History Panel</h1>
+
+<div class="section">
+<h2>Lost Items</h2>
+<div id="lostList"></div>
+</div>
+
+<div class="section">
+<h2>Found Items</h2>
+<div id="foundList"></div>
+</div>
+
+<div class="section">
+<h2>Retrieved Lost Items History</h2>
+<div id="retrievedLostList"></div>
+</div>
+
+<div class="section">
+<h2>Returned Found Items History</h2>
+<div id="returnedFoundList"></div>
+</div>
+
+<script>
+
+/* PAGE PROTECTION */
+
+if(localStorage.getItem("role") !== "admin"){
+  window.location.href = "index.html";
+}
+
+let lostItems = JSON.parse(localStorage.getItem("lostItems")) || [];
+let foundItems = JSON.parse(localStorage.getItem("foundItems")) || [];
+
+const lostContainer = document.getElementById("lostList");
+const foundContainer = document.getElementById("foundList");
+
+const retrievedLostContainer = document.getElementById("retrievedLostList");
+const returnedFoundContainer = document.getElementById("returnedFoundList");
+
+
+function renderAdmin(){
+
+lostContainer.innerHTML="";
+foundContainer.innerHTML="";
+retrievedLostContainer.innerHTML="";
+returnedFoundContainer.innerHTML="";
+
+
+/* LOST ITEMS */
+
+lostItems.forEach((item,index)=>{
+
+if(item.status === "retrieved"){
+renderRetrievedLost(item);
+return;
+}
+
+const card=document.createElement("div");
+card.className="card";
+
+card.innerHTML=`
+
+${item.image ? `<img src="${item.image}" class="item-image">` : ""}
+
+<div class="card-details">
+
+<h3>${item.itemName}</h3>
+
+<p><strong>Description:</strong> ${item.itemDesc}</p>
+<p><strong>Lost at:</strong> ${item.lostPlace}</p>
+<p><strong>Date:</strong> ${item.lostDate}</p>
+<p><strong>Reported by:</strong> ${item.student}</p>
+<p><strong>Phone:</strong> ${item.phone}</p>
+
+${item.responses ? `
+<div class="response-box">
+<strong>Responses:</strong>
+<ul>
+${item.responses.map(r => `<li>${r.name} (${r.class})</li>`).join("")}
+</ul>
+</div>
+` : ""}
+
+<div class="admin-buttons">
+
+<button onclick="markRetrieved(${index})">
+Mark Retrieved
+</button>
+
+<button onclick="deleteLost(${index})">
+Delete
+</button>
+
+</div>
+
+</div>
+`;
+
+lostContainer.appendChild(card);
+
+});
+
+
+/* FOUND ITEMS */
+
+foundItems.forEach((item,index)=>{
+
+if(item.status === "returned"){
+renderReturnedFound(item);
+return;
+}
+
+const card=document.createElement("div");
+card.className="card";
+
+card.innerHTML=`
+
+${item.image ? `<img src="${item.image}" class="item-image">` : ""}
+
+<div class="card-details">
+
+<h3>${item.itemName}</h3>
+
+<p><strong>Description:</strong> ${item.itemDesc}</p>
+<p><strong>Found at:</strong> ${item.foundPlace}</p>
+<p><strong>Date:</strong> ${item.foundDate}</p>
+<p><strong>Reported by:</strong> ${item.student}</p>
+<p><strong>Phone:</strong> ${item.phone}</p>
+
+${item.responses ? `
+<div class="response-box">
+<strong>Responses:</strong>
+<ul>
+${item.responses.map(r => `<li>${r.name} (${r.class})</li>`).join("")}
+</ul>
+</div>
+` : ""}
+
+<div class="admin-buttons">
+
+<button onclick="markReturned(${index})">
+Mark Returned
+</button>
+
+<button onclick="deleteFound(${index})">
+Delete
+</button>
+
+</div>
+
+</div>
+`;
+
+foundContainer.appendChild(card);
+
+});
+
+}
+
+
+
+/* HISTORY RENDERERS */
+
+function renderRetrievedLost(item){
+
+const card=document.createElement("div");
+card.className="card";
+
+card.innerHTML=`
+
+${item.image ? `<img src="${item.image}" class="item-image">` : ""}
+
+<div class="card-details">
+
+<h3>${item.itemName}</h3>
+
+<p><strong>Description:</strong> ${item.itemDesc}</p>
+<p><strong>Status:</strong> Retrieved</p>
+
+</div>
+`;
+
+retrievedLostContainer.appendChild(card);
+
+}
+
+
+
+function renderReturnedFound(item){
+
+const card=document.createElement("div");
+card.className="card";
+
+card.innerHTML=`
+
+${item.image ? `<img src="${item.image}" class="item-image">` : ""}
+
+<div class="card-details">
+
+<h3>${item.itemName}</h3>
+
+<p><strong>Description:</strong> ${item.itemDesc}</p>
+<p><strong>Status:</strong> Returned</p>
+
+</div>
+`;
+
+returnedFoundContainer.appendChild(card);
+
+}
+
+
+
+/* DELETE FUNCTIONS */
+
+function deleteLost(index){
+
+if(!confirm("Delete this report?")) return;
+
+lostItems.splice(index,1);
+
+localStorage.setItem("lostItems",JSON.stringify(lostItems));
+
+renderAdmin();
+
+}
+
+
+function deleteFound(index){
+
+if(!confirm("Delete this report?")) return;
+
+foundItems.splice(index,1);
+
+localStorage.setItem("foundItems",JSON.stringify(foundItems));
+
+renderAdmin();
+
+}
+
+
+
+/* STATUS UPDATE */
+
+function markRetrieved(index){
+
+lostItems[index].status="retrieved";
+
+localStorage.setItem("lostItems",JSON.stringify(lostItems));
+
+renderAdmin();
+
+}
+
+
+function markReturned(index){
+
+foundItems[index].status="returned";
+
+localStorage.setItem("foundItems",JSON.stringify(foundItems));
+
+renderAdmin();
+
+}
+
+
+renderAdmin();
+
+</script>
+
+</body>
+</html>
